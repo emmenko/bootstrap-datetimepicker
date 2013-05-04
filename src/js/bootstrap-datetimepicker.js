@@ -164,6 +164,17 @@
       this._detachDatePickerGlobalEvents();
     },
 
+    remove: function() {
+      this.hide();
+      this._detachDatePickerEvents();
+      this._detachDatePickerGlobalEvents();
+      this.widget.remove();
+      delete this.$element.data().datepicker;
+      if (!this.isInput) {
+        delete this.$element.data().date;
+      }
+    },
+
     set: function() {
       var formatted = '';
       if (!this._unset) formatted = this.formatDate(this._date);
@@ -1078,6 +1089,7 @@
     }
   };
 
+  var old = $.fn.datetimepicker;
   $.fn.datetimepicker = function ( option, val ) {
     return this.each(function () {
       var $this = $(this),
@@ -1301,5 +1313,32 @@
     '</div>': '')
     );
   }
+
+  /* DATEPICKER NO CONFLICT
+  * =================== */
+
+  $.fn.datetimepicker.noConflict = function(){
+    $.fn.datetimepicker = old;
+    return this;
+  };
+
+
+  /* DATEPICKER DATA-API
+  * ================== */
+
+  $(document).on(
+    'focus.datetimepicker.data-api click.datetimepicker.data-api',
+    '[data-provide="datetimepicker"]',
+    function(e){
+      var $this = $(this);
+      if ($this.data('datetimepicker')) return;
+      e.preventDefault();
+      // component click requires us to explicitly show it
+      $this.datetimepicker('show');
+    }
+  );
+  $(function(){
+    $('[data-provide="datetimepicker-inline"]').datetimepicker();
+  });
 
 })(window.jQuery)
