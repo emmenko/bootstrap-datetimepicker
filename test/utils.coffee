@@ -24,13 +24,12 @@ setupDateTimePicker = (opts) ->
     @dateWidget = @widget.find('.datepicker')
     @timeWidget = @widget.find('.timepicker')
     @dateShouldEqual = =>
-      expect(@picker.getDate().getTime()).to.equal(
-        Date.UTC.apply(Date, arguments))
+      expect(@picker.getDate().getTime()).to.equal(Date.UTC.apply(Date, arguments))
+
       ld = @picker.getLocalDate()
       offset = ld.getTimezoneOffset()
       offset = offset * 60 * 1000 # in ms
-      expect(@picker.getLocalDate().getTime()).to.equal(
-        Date.UTC.apply(Date, arguments) + offset)
+      expect(ld.getTime()).to.equal(Date.UTC.apply(Date, arguments) + offset)
 
 teardownDateTimePicker = ->
   ->

@@ -10,7 +10,7 @@ suite 'issue', ->
   #   value: '05/01/1905 09:52:00 PM'
   #   pick12HourFormat: true
   # })
-  
+
   test "4 - TypeError: Cannot call method 'data' of undefined", ->
     teardownDateTimePicker().call @
     setupDateTimePicker({
@@ -33,7 +33,7 @@ suite 'issue', ->
       secondStep: 30
       inputMask: true
     }).call @
-    @dateShouldEqual(2012, 11, 30, 8)
+    @dateShouldEqual 2012, 11, 30, 8
 
   test '5 - Date value problem when click on time', ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/5
@@ -65,7 +65,7 @@ suite 'issue', ->
     @input.change()
     # Click on 2 january
     @dateWidget.find('.datepicker-days .day.new:contains(2)').click()
-    @dateShouldEqual(2013, 0, 2, 1, 1, 1)
+    @dateShouldEqual 2013, 0, 2, 1, 1, 1
 
   test '61 - Delete date string and then select date by click the icon does not work', ->
     # https://github.com/tarruda/bootstrap-datetimepicker/issues/61

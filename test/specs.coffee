@@ -279,12 +279,12 @@ describe 'datetimepicker api', ->
   it 'supports local dates', ->
     d = new Date(2000, 1, 15, 8, 8, 8, 743)
     @picker.setLocalDate(d)
-    @dateShouldEqual(2000, 1, 15, 8, 8, 8, 743)
+    @dateShouldEqual 2000, 1, 15, 8, 8, 8, 743
 
   it 'supports utc dates', ->
     d = Date.UTC(2000, 1, 15, 8, 8, 8, 743)
     @picker.setDate(new Date(d))
-    @dateShouldEqual(2000, 1, 15, 8, 8, 8, 743)
+    @dateShouldEqual 2000, 1, 15, 8, 8, 8, 743
 
   it 'unsets value by passing null', ->
     @picker.setDate(null)
@@ -326,6 +326,14 @@ describe 'datetimepicker api', ->
     expect(@dateWidget.find('.datepicker-years .next').is '.disabled').to.be.true
     expect(@dateWidget.find('.datepicker-years .prev').is '.disabled').to.be.false
 
+  it "supports 'setDate' as string", ->
+    @picker.setDate("01/10/2113 19:40:09 0")
+    @dateShouldEqual 2113, 0, 10, 19, 40, 9, 0
+
+  it "supports 'setValue' as string", ->
+    @picker.setValue("01/10/2113 19:40:09 0")
+    @dateShouldEqual 2113, 0, 10, 19, 40, 9, 0
+
 
 describe 'datetimepicker with pickSeconds = false', ->
 
@@ -340,4 +348,33 @@ describe 'datetimepicker with pickSeconds = false', ->
     expect(@timeWidget.find('[data-action=incrementSeconds]').length).to.equal 0
     expect(@timeWidget.find('[data-action=decrementSeconds]').length).to.equal 0
     expect(@timeWidget.find('.timepicker-second').length) .to.equal 0
+
+
+describe 'datetimepicker events', ->
+
+  beforeEach setupDateTimePicker()
+
+  afterEach teardownDateTimePicker()
+
+  it "should trigger 'show' event", ->
+    isTriggered = false
+    @component.on "show", -> isTriggered = true
+    @component.datetimepicker("show")
+    expect(isTriggered).to.be.true
+
+  it "should trigger 'hide' event", ->
+    isTriggered = false
+    @component.on "hide", -> isTriggered = true
+    @component.datetimepicker("hide")
+    expect(isTriggered).to.be.true
+
+  it "should trigger 'changeDate' event", ->
+    isTriggered = false
+    date = null
+    @component.on "changeDate", (e)->
+      isTriggered = true
+      date = e.date
+    @picker.notifyChange()
+    expect(isTriggered).to.be.true
+    expect(date).to.be.an.instanceof(Date)
 
