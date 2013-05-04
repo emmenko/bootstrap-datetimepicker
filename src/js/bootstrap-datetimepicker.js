@@ -123,7 +123,7 @@
 
     show: function(e) {
       this.widget.show();
-      this.height = this.component ? this.component.outerHeight() : this.$element.outerHeight();
+      this.height = this.component && this.component.length ? this.component.outerHeight() : this.$element.outerHeight();
       this.place();
       this.$element.trigger({
         type: 'show',
@@ -137,12 +137,12 @@
     },
 
     disable: function(){
-          this.$element.find('input').prop('disabled',true);
-          this._detachDatePickerEvents();
+      this.$element.find('input').prop('disabled',true);
+      this._detachDatePickerEvents();
     },
     enable: function(){
-          this.$element.find('input').prop('disabled',false);
-          this._attachDatePickerEvents();
+      this.$element.find('input').prop('disabled',false);
+      this._attachDatePickerEvents();
     },
 
     hide: function() {
@@ -261,21 +261,21 @@
 
     place: function(){
       var position = 'absolute';
-      var offset = this.component ? this.component.offset() : this.$element.offset();
-      this.width = this.component ? this.component.outerWidth() : this.$element.outerWidth();
+      var offset = this.component && this.component.length ? this.component.offset() : this.$element.offset();
+      this.width = this.component && this.component.length ? this.component.outerWidth() : this.$element.outerWidth();
       offset.top = offset.top + this.height;
 
       var $window = $(window);
-      
+
       if ( this.options.width != undefined ) {
         this.widget.width( this.options.width );
       }
-      
+
       if ( this.options.orientation == 'left' ) {
         this.widget.addClass( 'left-oriented' );
         offset.left   = offset.left - this.widget.width() + 20;
       }
-      
+
       if (this._isInFixed()) {
         position = 'fixed';
         offset.top -= $window.scrollTop();
@@ -329,6 +329,7 @@
                               tmp.getMilliseconds())
         }
       }
+
       this.viewDate = UTCDate(this._date.getUTCFullYear(), this._date.getUTCMonth(), 1, 0, 0, 0, 0);
       this.fillDate();
       this.fillTime();
@@ -918,6 +919,7 @@
     _compileFormat: function () {
       var match, component, components = [], mask = [],
       str = this.format, propertiesByIndex = {}, i = 0, pos = 0;
+
       while (match = formatComponent.exec(str)) {
         component = match[0];
         if (component in dateFormatComponents) {
@@ -989,6 +991,7 @@
         }
       } else {
         this.$element.on({
+          'focus': $.proxy(this.show, this),
           'change': $.proxy(this.change, this)
         }, 'input');
         if (this.options.maskInput) {
@@ -1034,6 +1037,7 @@
         }
       } else {
         this.$element.off({
+          'focus': this.show,
           'change': this.change
         }, 'input');
         if (this.options.maskInput) {
@@ -1081,7 +1085,7 @@
       options = typeof option === 'object' && option;
       if (!data) {
         $this.data('datetimepicker', (data = new DateTimePicker(
-          this, $.extend({}, $.fn.datetimepicker.defaults,options))));
+          this, $.extend({}, $.fn.datetimepicker.defaults, options))));
       }
       if (typeof option === 'string') data[option](val);
     });
@@ -1297,6 +1301,5 @@
     '</div>': '')
     );
   }
-
 
 })(window.jQuery)
